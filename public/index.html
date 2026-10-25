@@ -1,1 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Fleet Arcade — Online Games</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="/socket.io/socket.io.js"></script>
+</head>
+<body>
+  <div class="app-shell">
+    <header class="topbar">
+      <div>
+        <p class="eyebrow">FRIENDLY FIRE · ONLINE ARCADE</p>
+        <h1>FLEET <span>ARCADE</span></h1>
+      </div>
+      <div class="connection-pill"><span class="status-dot" id="statusDot"></span><span id="connectionStatus">Not connected</span></div>
+    </header>
 
+    <main>
+      <section class="panel lobby" id="lobby">
+        <div class="panel-heading">
+          <div><p class="eyebrow">MULTIPLAYER ARCADE</p><h2>Choose your game</h2></div>
+          <p class="muted">Pick a game, create a room, and invite a friend.</p>
+        </div>
+        <div class="game-picker">
+          <label for="gameModeSelect">GAME MODE</label>
+          <select id="gameModeSelect">
+            <option value="battleship">Battleship — Naval strategy</option>
+            <option value="tictactoe">Tic-Tac-Toe — Quick duel</option>
+            <option value="connectfour">Connect Four — Four in a row</option>
+            <option value="rps">Rock Paper Scissors — Best of three</option>
+          </select>
+          <p class="game-picker-hint" id="gameModeHint">Deploy your fleet and sink your opponent's ships.</p>
+        </div>
+        <div class="lobby-actions">
+          <div class="lobby-card">
+            <div class="card-icon">＋</div>
+            <h3>Host a game</h3>
+            <p>Create an online room for the game selected above and share its code.</p>
+            <button class="button primary" id="createRoomBtn">Create room</button>
+          </div>
+          <div class="lobby-card">
+            <div class="card-icon">↗</div>
+            <h3>Join a friend</h3>
+            <p>Enter the room code your friend sent you. Their selected game will load automatically.</p>
+            <form id="joinForm">
+              <input id="roomInput" maxlength="12" autocomplete="off" placeholder="ROOM CODE" aria-label="Room code">
+              <button class="button secondary" type="submit">Join room</button>
+            </form>
+          </div>
+        </div>
+        <p class="notice" id="lobbyNotice" role="status">Choose a game, create a room, and share its code with a friend.</p>
+      </section>
+
+      <section class="panel waiting hidden" id="waitingPanel">
+        <div class="radar"><div class="radar-ring"></div><div class="radar-ring ring-two"></div><div class="radar-sweep"></div><span>⌁</span></div>
+        <p class="eyebrow">ROOM CREATED</p>
+        <h2>Waiting for your opponent</h2>
+        <p class="room-game-label" id="waitingGameLabel">Game: Battleship</p>
+        <p class="muted">Share this code with your friend. Keep this tab open.</p>
+        <div class="room-code-line"><strong id="roomCodeDisplay">--------</strong><button class="button secondary small" id="copyCodeBtn">Copy code</button></div>
+        <p class="notice" id="waitingNotice">Waiting for a player to join…</p>
+        <button class="button ghost" id="cancelRoomBtn">Back to lobby</button>
+      </section>
+
+      <section class="panel game hidden" id="miniGamePanel">
+        <div class="game-header">
+          <div><p class="eyebrow">LIVE MATCH</p><h2 id="miniGameTitle">Tic-Tac-Toe</h2></div>
+          <div class="turn-chip" id="miniTurnChip">CONNECTING</div>
+        </div>
+        <div class="mini-game-meta">
+          <span class="mini-player" id="miniPlayerLabel">You are Player 1</span>
+          <span class="mini-room">ROOM <strong id="miniRoomCode">------</strong></span>
+        </div>
+        <div id="miniInstruction" class="mini-instruction">Waiting for your opponent…</div>
+        <div id="miniBoard" class="mini-board" aria-label="Game board"></div>
+        <div id="miniControls" class="mini-controls"></div>
+        <div class="battle-log-wrap mini-log-wrap">
+          <div class="log-heading"><h3>Match log</h3><span class="live-label"><span></span> LIVE</span></div>
+          <div id="miniLog" class="battle-log" aria-live="polite"><p>Room connected. Match starting…</p></div>
+        </div>
+        <div class="game-footer"><span>FLEET ARCADE / ONLINE</span><button class="button ghost small" id="leaveMiniGameBtn">Leave game</button></div>
+      </section>
+
+      <section class="panel game hidden" id="gamePanel">
+        <div class="game-header">
+          <div><p class="eyebrow">LIVE MATCH</p><h2 id="gameTitle">Prepare your fleet</h2></div>
+          <div class="turn-chip" id="turnChip">SETUP PHASE</div>
+        </div>
+        <div class="game-toolbar">
+          <div class="fleet-tools">
+            <label for="shipSelect">Place ship</label>
+            <select id="shipSelect">
+              <option value="Carrier">Carrier — 5</option>
+              <option value="Battleship">Battleship — 4</option>
+              <option value="Cruiser">Cruiser — 3</option>
+              <option value="Submarine">Submarine — 3</option>
+              <option value="Destroyer">Destroyer — 2</option>
+            </select>
+            <button class="button secondary" id="rotateBtn">Rotate: horizontal</button>
+            <button class="button ghost" id="randomBtn">Randomise fleet</button>
+          </div>
+          <button class="button primary" id="readyBtn">I'm ready</button>
+        </div>
+        <div class="boards">
+          <div class="board-wrap">
+            <div class="board-title"><div><span class="board-marker own">A</span><h3>Your fleet</h3></div><span id="ownCount" class="board-subtitle">5 ships</span></div>
+            <div class="axis-labels"><span></span><div class="column-labels" id="ownCols"></div></div>
+            <div class="board-row"><div class="row-labels" id="ownRows"></div><div class="board" id="ownBoard" aria-label="Your fleet board"></div></div>
+            <p class="board-help" id="ownHelp">Select a ship, then click a cell to place it.</p>
+          </div>
+          <div class="board-wrap enemy-wrap">
+            <div class="board-title"><div><span class="board-marker enemy">B</span><h3>Opponent waters</h3></div><span id="enemyCount" class="board-subtitle">Awaiting opponent</span></div>
+            <div class="axis-labels"><span></span><div class="column-labels" id="enemyCols"></div></div>
+            <div class="board-row"><div class="row-labels" id="enemyRows"></div><div class="board" id="enemyBoard" aria-label="Opponent board"></div></div>
+            <p class="board-help" id="enemyHelp">You can fire here once both fleets are ready.</p>
+          </div>
+        </div>
+        <div class="battle-log-wrap">
+          <div class="log-heading"><h3>Battle log</h3><span class="live-label"><span></span> LIVE</span></div>
+          <div id="battleLog" class="battle-log" aria-live="polite"><p>Waiting for the match to begin…</p></div>
+        </div>
+        <div class="game-footer"><span>FLEET ARCADE / ONLINE</span><button class="button ghost small" id="leaveGameBtn">Leave game</button></div>
+      </section>
+    </main>
+    <footer><span>FLEET ARCADE · ONLINE MULTIPLAYER</span><span>BATTLESHIP · TIC-TAC-TOE · CONNECT FOUR · RPS</span></footer>
+  </div>
+  <div class="toast" id="toast" role="status"></div>
+  <script src="/script.js"></script>
+</body>
+</html>
