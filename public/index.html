@@ -30,8 +30,33 @@
             <option value="tictactoe">Tic-Tac-Toe — Quick duel</option>
             <option value="connectfour">Connect Four — Four in a row</option>
             <option value="rps">Rock Paper Scissors — Best of three</option>
+            <option value="highlow">Higher or Lower</option><option value="mathsprint">Math Sprint</option>
+            <option value="memory">Memory Match</option><option value="scramble">Word Scramble</option>
+            <option value="hangman">Hangman Duel</option><option value="coinflip">Coin Flip</option>
+            <option value="dice">Dice Duel</option><option value="nim">Nim Pile</option>
+            <option value="connectthree">Connect Three</option><option value="reversi">Reversi</option>
+            <option value="wordle">Wordle Race</option><option value="typing">Typing Race</option>
+            <option value="reaction">Reaction Test</option><option value="trivia">Trivia Duel</option>
+            <option value="penalty">Penalty Shootout</option><option value="blackjack">Blackjack Duel</option>
+            <option value="codebreaker">Code Breaker</option><option value="oddoneout">Odd One Out</option>
+            <option value="sequence">Sequence Recall</option><option value="gridconquest">Grid Conquest</option>
+            <option value="emojiriddle">Emoji Riddle</option>
           </select>
           <p class="game-picker-hint" id="gameModeHint">Deploy your fleet and sink your opponent's ships.</p>
+        </div>
+        <div class="catalog-toolbar">
+          <div class="catalog-search"><icon class="search-symbol" aria-hidden="true">⌕</icon><input id="gameSearch" type="search" placeholder="Search 25 games…" aria-label="Search games"></div>
+          <select id="categoryFilter" aria-label="Filter game category"><option value="all">All categories</option><option value="strategy">Strategy</option><option value="puzzle">Puzzle</option><option value="party">Party</option><option value="speed">Speed</option><option value="words">Word games</option></select>
+          <button class="button secondary" id="randomGameBtn" type="button">🎲 Random game</button>
+          <button class="button ghost" id="favoritesOnlyBtn" type="button" aria-pressed="false">☆ Favorites</button>
+        </div>
+        <div id="gameCatalog" class="game-catalog" aria-label="Game catalogue"></div>
+        <div class="feature-strip"><span>25 GAMES</span><span>ROOM CODES</span><span>SERVER-VALIDATED MOVES</span><span>RESPONSIVE</span></div>
+        <div class="player-preferences">
+          <label for="playerNameInput">PLAYER NAME</label>
+          <input id="playerNameInput" maxlength="18" placeholder="Choose a nickname" autocomplete="nickname">
+          <button class="button ghost small" id="soundToggle" type="button" aria-pressed="true">🔊 Sound on</button>
+          <span class="preferences-note">Name and sound settings stay in this browser.</span>
         </div>
         <div class="lobby-actions">
           <div class="lobby-card">
@@ -59,7 +84,7 @@
         <h2>Waiting for your opponent</h2>
         <p class="room-game-label" id="waitingGameLabel">Game: Battleship</p>
         <p class="muted">Share this code with your friend. Keep this tab open.</p>
-        <div class="room-code-line"><strong id="roomCodeDisplay">--------</strong><button class="button secondary small" id="copyCodeBtn">Copy code</button></div>
+        <div class="room-code-line"><strong id="roomCodeDisplay">--------</strong><button class="button secondary small" id="copyCodeBtn">Copy code</button><button class="button primary small" id="copyInviteBtn">Copy invite link</button></div>
         <p class="notice" id="waitingNotice">Waiting for a player to join…</p>
         <button class="button ghost" id="cancelRoomBtn">Back to lobby</button>
       </section>
@@ -124,7 +149,7 @@
         <div class="game-footer"><span>FLEET ARCADE / ONLINE</span><button class="button ghost small" id="leaveGameBtn">Leave game</button></div>
       </section>
     </main>
-    <footer><span>FLEET ARCADE · ONLINE MULTIPLAYER</span><span>BATTLESHIP · TIC-TAC-TOE · CONNECT FOUR · RPS</span></footer>
+    <footer><span>FLEET ARCADE · 25 GAMES</span><span>SEARCH · FAVORITES · ROOM CODES · LIVE MATCHES</span></footer>
   </div>
   <div class="toast" id="toast" role="status"></div>
   <script src="/script.js"></script>
