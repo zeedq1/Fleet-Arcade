@@ -1,8 +1,8 @@
 {
   "name": "fleet-arcade-render",
-  "version": "2.0.0",
+  "version": "3.0.0",
   "private": true,
-  "description": "Fleet Arcade online multiplayer games hosted on Render",
+  "description": "Fleet Arcade 25-game online multiplayer hub for Render",
   "main": "server.js",
   "scripts": {
     "start": "node server.js"
