@@ -1,76 +1,40 @@
-# Fleet Arcade — Render Multiplayer Edition
+# Fleet Arcade Ultimate — 100 Games
 
-Fleet Arcade is a responsive, browser-based multiplayer arcade with **25 games**, room codes, nickname support, invite links, searchable categories, favourites, random game selection and optional sound effects. The website and game server run together on Render, so a player's computer does not host the match.
+A redesigned Fleet Arcade project with a 100-item catalogue, single-player sessions, online versus rooms, and co-op score hunts. The games use reusable mini-game engines, with distinct prompts, topics, lengths, and goals per catalogue item.
 
-## 25 games
+## Included
+- 100 catalogue entries across Reflex, Arcade, Numbers, Words, Trivia, Memory, Logic, Puzzle, and Co-op categories
+- Single-player mode with five rounds, personal bests, and session counts stored in the browser
+- Online room codes, invite links, nicknames, versus scoring, co-op team totals, round progression, and live room player lists
+- Shared challenge seed so connected players receive the same round prompt
+- Search, category filters, mode filters, sort, favourites, sound toggle, responsive layout
+- Node.js + Express + Socket.IO server, Render config and `/health` check
 
-### Existing classics
-- **Battleship** — deploy five ships and sink the opponent's fleet.
-- **Tic-Tac-Toe** — classic X/O duel.
-- **Connect Four** — connect four discs in a row.
-- **Rock Paper Scissors** — best of three hand-sign rounds.
-
-### 21 additional games
-1. **Higher or Lower** — take turns guessing a number from 1 to 100.
-2. **Math Sprint** — solve ten arithmetic problems and compete on score.
-3. **Memory Match** — match eight pairs of hidden cards.
-4. **Word Scramble** — be the first to unscramble the word.
-5. **Hangman Duel** — alternate letter guesses to solve the word.
-6. **Coin Flip** — pick heads or tails for five rounds.
-7. **Dice Duel** — roll and race to 30 points.
-8. **Nim Pile** — take one to three stones; taking the last wins.
-9. **Connect Three** — connect three marks on a 4×4 board.
-10. **Reversi** — flip discs and finish with the most territory.
-11. **Wordle Race** — race to guess a six-letter word in six attempts.
-12. **Typing Race** — type the shared phrase exactly to win.
-13. **Reaction Test** — wait for the signal and click quickly.
-14. **Trivia Duel** — answer five general-knowledge questions.
-15. **Penalty Shootout** — choose a shot and goalkeeper dive across five rounds.
-16. **Blackjack Duel** — aim for a total close to 21 without busting.
-17. **Code Breaker** — use exact/misplaced clues to crack a four-digit code.
-18. **Odd One Out** — spot the item that does not belong over five rounds.
-19. **Sequence Recall** — memorise a number sequence and reproduce it.
-20. **Grid Conquest** — claim spaces on a 5×5 grid.
-21. **Emoji Riddle** — decode an emoji clue before your opponent.
-
-## Project files
-
-- `server.js` — Express web server, Socket.IO connections, room lifecycle, and server-validated moves.
-- `package.json` — Node dependencies and start command.
-- `public/index.html` — web interface and game catalogue.
-- `public/style.css` — responsive design, animations and game layouts.
-- `public/script.js` — lobby, game rendering and multiplayer client.
-- `render.yaml` — optional Render Blueprint configuration.
+## Local run
+1. Install Node.js 20 or newer.
+2. From the project root run `npm install`.
+3. Run `npm start`.
+4. Open `http://localhost:10000`.
 
 ## Deploy to Render
+1. Extract the ZIP.
+2. Create a GitHub repository and upload the *contents* of this folder, keeping `server.js`, `package.json` and `render.yaml` in the repository root and the client files in `public/`.
+3. In Render, choose **New → Web Service**, connect that repository, and use:
+   - Runtime: Node
+   - Build command: `npm install`
+   - Start command: `npm start`
+   - Health check path: `/health`
+4. Choose a plan and deploy. Render's free instances can sleep when idle, so first connection after a quiet period may be slow.
+5. Open the Render URL. Host chooses a game → Versus room or Co-op room, then shares the room code. Other players use the code box on the home page. The host starts with at least two players.
 
-### Option A — Render dashboard
-1. Download and extract the ZIP.
-2. Create a new GitHub repository, such as `fleet-arcade`.
-3. Upload the **contents** of the `fleet-arcade` folder to the repository root. The root should contain `server.js`, `package.json`, `render.yaml`, `README.md`, and a `public` folder.
-4. Go to [Render Dashboard](https://dashboard.render.com/) and sign in.
-5. Choose **New → Web Service** and connect the GitHub repository.
-6. Set **Runtime** to Node, **Build Command** to `npm install`, and **Start Command** to `npm start`.
-7. For casual testing, you can select a free instance if Render offers it for your account/region.
-8. Deploy and open the `https://your-service-name.onrender.com` address Render provides.
-9. Share that URL with your friend; both players use the same website.
+## Game modes
+- **Solo:** locally generated five-round run; no server connection required.
+- **Versus:** every player gets the same seed-based challenge and their points are compared.
+- **Co-op:** the same challenges are played, and everyone's points add to one team total.
 
-### Option B — Render Blueprint
-1. Upload the project to GitHub as above.
-2. In Render, choose **New → Blueprint**, select your repository, and follow the prompts in `render.yaml`.
-
-## Play together
-1. Open the Render website.
-2. Optionally enter a nickname, and choose a game from the searchable catalogue or random picker.
-3. Click **Create room**, then copy the room code or invite link.
-4. Your friend opens the URL and enters the code, or uses the invite link to join automatically.
-5. Play in the browser. Favourites, nickname and sound preference are saved in that browser.
-
-## Hosting notes
-
-- Render serves the page and multiplayer server from the same Node service; GitHub Pages is not required for this version.
-- The server listens on `process.env.PORT` and binds to `0.0.0.0`.
-- Game rooms are held in server memory. Render restarts/redeployments end active matches; there are no user accounts or persistent rankings yet.
-- A free web service may sleep when idle and take time to wake. See [Render's current free-instance limits](https://render.com/docs/free).
-- The server validates the major moves, choices and answers for the added games. This is a casual starter arcade, not a competitive anti-cheat platform. There is no database or API key needed.
-- Run locally with `npm install` followed by `npm start`, then open `http://localhost:10000`.
+## Current prototype limitations
+- This is a casual arcade prototype, not a cheat-proof competitive platform. Round scores are client-reported; a malicious client could forge them.
+- Rooms and scores live in server memory, so a server restart ends active matches and clears room state.
+- The 100 titles are built from reusable mechanics (reaction, tapping, maths, trivia, word scramble, typing, sequence recall, memory match, code guessing, higher/lower, odd-one-out and pattern solving). Titles with a similar mechanic are variants, not 100 entirely bespoke game engines.
+- Some modes are challenge-based rather than real-time physics games. Co-op is a shared score objective; players solve the same round and combine their points.
+- A full live browser + multiplayer playtest should be run after deployment. Syntax/structure checks alone cannot guarantee every hosted network will work.

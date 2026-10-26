@@ -1,17 +1,18 @@
 {
-  "name": "fleet-arcade-render",
+  "name": "fleet-arcade-ultimate",
   "version": "3.0.0",
   "private": true,
-  "description": "Fleet Arcade 25-game online multiplayer hub for Render",
+  "description": "100 mini-games with solo, versus and co-op play",
   "main": "server.js",
   "scripts": {
-    "start": "node server.js"
-  },
-  "engines": {
-    "node": ">=20"
+    "start": "node server.js",
+    "dev": "node server.js"
   },
   "dependencies": {
     "express": "^4.21.2",
     "socket.io": "^4.8.1"
+  },
+  "engines": {
+    "node": ">=20"
   }
 }
