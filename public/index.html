@@ -1,157 +1,35 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Fleet Arcade — Online Games</title>
-  <link rel="stylesheet" href="style.css">
-  <script src="/socket.io/socket.io.js"></script>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#0a111a"><title>Fleet Arcade — 100 Games</title>
+  <link rel="stylesheet" href="./style.css">
+  <script src="./socket.io/socket.io.js" defer></script>
+  <script src="./catalog.js" defer></script><script src="./app.js" defer></script>
 </head>
 <body>
   <div class="app-shell">
     <header class="topbar">
-      <div>
-        <p class="eyebrow">FRIENDLY FIRE · ONLINE ARCADE</p>
-        <h1>FLEET <span>ARCADE</span></h1>
-      </div>
-      <div class="connection-pill"><span class="status-dot" id="statusDot"></span><span id="connectionStatus">Not connected</span></div>
+      <a class="brand" href="#home" id="brandHome"><span class="brand-mark">FA</span><span><strong>FLEET ARCADE</strong><small>100 GAMES. ONE LOBBY.</small></span></a>
+      <div class="header-tools"><label class="nick-wrap"><span>CALLSIGN</span><input id="nickname" maxlength="18" placeholder="Player One" autocomplete="nickname"></label><button class="icon-btn" id="soundToggle" title="Toggle sounds" aria-label="Toggle sounds">♫ <span>Sound on</span></button><div class="online-chip"><i id="onlineDot"></i><span id="onlineLabel">OFFLINE MODE READY</span></div></div>
     </header>
-
     <main>
-      <section class="panel lobby" id="lobby">
-        <div class="panel-heading">
-          <div><p class="eyebrow">MULTIPLAYER ARCADE</p><h2>Choose your game</h2></div>
-          <p class="muted">Pick a game, create a room, and invite a friend.</p>
-        </div>
-        <div class="game-picker">
-          <label for="gameModeSelect">GAME MODE</label>
-          <select id="gameModeSelect">
-            <option value="battleship">Battleship — Naval strategy</option>
-            <option value="tictactoe">Tic-Tac-Toe — Quick duel</option>
-            <option value="connectfour">Connect Four — Four in a row</option>
-            <option value="rps">Rock Paper Scissors — Best of three</option>
-            <option value="highlow">Higher or Lower</option><option value="mathsprint">Math Sprint</option>
-            <option value="memory">Memory Match</option><option value="scramble">Word Scramble</option>
-            <option value="hangman">Hangman Duel</option><option value="coinflip">Coin Flip</option>
-            <option value="dice">Dice Duel</option><option value="nim">Nim Pile</option>
-            <option value="connectthree">Connect Three</option><option value="reversi">Reversi</option>
-            <option value="wordle">Wordle Race</option><option value="typing">Typing Race</option>
-            <option value="reaction">Reaction Test</option><option value="trivia">Trivia Duel</option>
-            <option value="penalty">Penalty Shootout</option><option value="blackjack">Blackjack Duel</option>
-            <option value="codebreaker">Code Breaker</option><option value="oddoneout">Odd One Out</option>
-            <option value="sequence">Sequence Recall</option><option value="gridconquest">Grid Conquest</option>
-            <option value="emojiriddle">Emoji Riddle</option>
-          </select>
-          <p class="game-picker-hint" id="gameModeHint">Deploy your fleet and sink your opponent's ships.</p>
-        </div>
-        <div class="catalog-toolbar">
-          <div class="catalog-search"><icon class="search-symbol" aria-hidden="true">⌕</icon><input id="gameSearch" type="search" placeholder="Search 25 games…" aria-label="Search games"></div>
-          <select id="categoryFilter" aria-label="Filter game category"><option value="all">All categories</option><option value="strategy">Strategy</option><option value="puzzle">Puzzle</option><option value="party">Party</option><option value="speed">Speed</option><option value="words">Word games</option></select>
-          <button class="button secondary" id="randomGameBtn" type="button">🎲 Random game</button>
-          <button class="button ghost" id="favoritesOnlyBtn" type="button" aria-pressed="false">☆ Favorites</button>
-        </div>
-        <div id="gameCatalog" class="game-catalog" aria-label="Game catalogue"></div>
-        <div class="feature-strip"><span>25 GAMES</span><span>ROOM CODES</span><span>SERVER-VALIDATED MOVES</span><span>RESPONSIVE</span></div>
-        <div class="player-preferences">
-          <label for="playerNameInput">PLAYER NAME</label>
-          <input id="playerNameInput" maxlength="18" placeholder="Choose a nickname" autocomplete="nickname">
-          <button class="button ghost small" id="soundToggle" type="button" aria-pressed="true">🔊 Sound on</button>
-          <span class="preferences-note">Name and sound settings stay in this browser.</span>
-        </div>
-        <div class="lobby-actions">
-          <div class="lobby-card">
-            <div class="card-icon">＋</div>
-            <h3>Host a game</h3>
-            <p>Create an online room for the game selected above and share its code.</p>
-            <button class="button primary" id="createRoomBtn">Create room</button>
-          </div>
-          <div class="lobby-card">
-            <div class="card-icon">↗</div>
-            <h3>Join a friend</h3>
-            <p>Enter the room code your friend sent you. Their selected game will load automatically.</p>
-            <form id="joinForm">
-              <input id="roomInput" maxlength="12" autocomplete="off" placeholder="ROOM CODE" aria-label="Room code">
-              <button class="button secondary" type="submit">Join room</button>
-            </form>
-          </div>
-        </div>
-        <p class="notice" id="lobbyNotice" role="status">Choose a game, create a room, and share its code with a friend.</p>
+      <section id="homeScreen" class="screen">
+        <section class="hero panel">
+          <div class="hero-copy"><div class="eyebrow"><span class="pulse-dot"></span> THE ARCADE IS OPEN</div><h1>Pick a game.<br><em>Build a squad.</em></h1><p>Quick solo challenges, head-to-head matches, and co-op score hunts. One website, a hundred ways to play.</p><div class="hero-ctas"><button class="btn btn-primary" id="browseBtn">Explore all games <span>↘</span></button><div class="hero-stat"><strong>100</strong><span>PLAYABLE MINI-GAMES</span></div></div></div>
+          <div class="hero-art"><div class="art-glow"></div><div class="art-card art-card-back"><span>CO-OP</span><b>TEAM UP</b><i>+250 XP</i></div><div class="art-card art-card-mid"><span>VERSUS</span><b>1 v 1</b><i>READY?</i></div><div class="art-card art-card-front"><div class="crosshair">✳</div><span>FLEET ARCADE</span><b>GAME<br>ON.</b><i>PLAY YOUR WAY</i></div><div class="hero-orbit orbit-a"></div><div class="hero-orbit orbit-b"></div></div>
+        </section>
+        <section class="quickbar"><div class="quickbar-left"><span class="section-kicker">JUMP IN</span><div class="mode-pills" id="modeFilters"><button class="mode-pill active" data-mode="all">All modes</button><button class="mode-pill" data-mode="solo">Solo</button><button class="mode-pill" data-mode="versus">Versus</button><button class="mode-pill" data-mode="coop">Co-op</button></div></div><form class="join-box" id="joinForm"><div><label for="joinCode">HAVE A ROOM CODE?</label><input id="joinCode" maxlength="6" placeholder="ABC123" autocomplete="off"></div><button class="btn btn-secondary" type="submit">Join room <span>↗</span></button></form></section>
+        <section class="catalog-section" id="catalogSection"><div class="section-heading"><div><div class="eyebrow">YOUR NEXT OBSESSION</div><h2>Game library <span id="gameCount">100</span></h2></div><div class="catalog-tools"><label class="searchbox"><span>⌕</span><input id="searchGames" placeholder="Search games..." aria-label="Search games"></label><select id="sortGames" aria-label="Sort games"><option value="featured">Featured</option><option value="az">A to Z</option><option value="easy">Easiest first</option><option value="hard">Hardest first</option></select></div></div><div class="category-row" id="categoryFilters"></div><div class="game-grid" id="gameGrid"></div><div class="empty-state hidden" id="emptyState"><div>⌕</div><h3>No games found</h3><p>Try another search or category.</p></div></section>
+        <section class="feature-strip"><div><span class="feature-icon">◉</span><b>Instant solo play</b><small>No room required. Jump into a challenge.</small></div><div><span class="feature-icon">↗</span><b>Private room codes</b><small>Invite friends with a six-character code.</small></div><div><span class="feature-icon">✳</span><b>Co-op score hunts</b><small>Combine scores and chase the team target.</small></div></section>
       </section>
-
-      <section class="panel waiting hidden" id="waitingPanel">
-        <div class="radar"><div class="radar-ring"></div><div class="radar-ring ring-two"></div><div class="radar-sweep"></div><span>⌁</span></div>
-        <p class="eyebrow">ROOM CREATED</p>
-        <h2>Waiting for your opponent</h2>
-        <p class="room-game-label" id="waitingGameLabel">Game: Battleship</p>
-        <p class="muted">Share this code with your friend. Keep this tab open.</p>
-        <div class="room-code-line"><strong id="roomCodeDisplay">--------</strong><button class="button secondary small" id="copyCodeBtn">Copy code</button><button class="button primary small" id="copyInviteBtn">Copy invite link</button></div>
-        <p class="notice" id="waitingNotice">Waiting for a player to join…</p>
-        <button class="button ghost" id="cancelRoomBtn">Back to lobby</button>
-      </section>
-
-      <section class="panel game hidden" id="miniGamePanel">
-        <div class="game-header">
-          <div><p class="eyebrow">LIVE MATCH</p><h2 id="miniGameTitle">Tic-Tac-Toe</h2></div>
-          <div class="turn-chip" id="miniTurnChip">CONNECTING</div>
-        </div>
-        <div class="mini-game-meta">
-          <span class="mini-player" id="miniPlayerLabel">You are Player 1</span>
-          <span class="mini-room">ROOM <strong id="miniRoomCode">------</strong></span>
-        </div>
-        <div id="miniInstruction" class="mini-instruction">Waiting for your opponent…</div>
-        <div id="miniBoard" class="mini-board" aria-label="Game board"></div>
-        <div id="miniControls" class="mini-controls"></div>
-        <div class="battle-log-wrap mini-log-wrap">
-          <div class="log-heading"><h3>Match log</h3><span class="live-label"><span></span> LIVE</span></div>
-          <div id="miniLog" class="battle-log" aria-live="polite"><p>Room connected. Match starting…</p></div>
-        </div>
-        <div class="game-footer"><span>FLEET ARCADE / ONLINE</span><button class="button ghost small" id="leaveMiniGameBtn">Leave game</button></div>
-      </section>
-
-      <section class="panel game hidden" id="gamePanel">
-        <div class="game-header">
-          <div><p class="eyebrow">LIVE MATCH</p><h2 id="gameTitle">Prepare your fleet</h2></div>
-          <div class="turn-chip" id="turnChip">SETUP PHASE</div>
-        </div>
-        <div class="game-toolbar">
-          <div class="fleet-tools">
-            <label for="shipSelect">Place ship</label>
-            <select id="shipSelect">
-              <option value="Carrier">Carrier — 5</option>
-              <option value="Battleship">Battleship — 4</option>
-              <option value="Cruiser">Cruiser — 3</option>
-              <option value="Submarine">Submarine — 3</option>
-              <option value="Destroyer">Destroyer — 2</option>
-            </select>
-            <button class="button secondary" id="rotateBtn">Rotate: horizontal</button>
-            <button class="button ghost" id="randomBtn">Randomise fleet</button>
-          </div>
-          <button class="button primary" id="readyBtn">I'm ready</button>
-        </div>
-        <div class="boards">
-          <div class="board-wrap">
-            <div class="board-title"><div><span class="board-marker own">A</span><h3>Your fleet</h3></div><span id="ownCount" class="board-subtitle">5 ships</span></div>
-            <div class="axis-labels"><span></span><div class="column-labels" id="ownCols"></div></div>
-            <div class="board-row"><div class="row-labels" id="ownRows"></div><div class="board" id="ownBoard" aria-label="Your fleet board"></div></div>
-            <p class="board-help" id="ownHelp">Select a ship, then click a cell to place it.</p>
-          </div>
-          <div class="board-wrap enemy-wrap">
-            <div class="board-title"><div><span class="board-marker enemy">B</span><h3>Opponent waters</h3></div><span id="enemyCount" class="board-subtitle">Awaiting opponent</span></div>
-            <div class="axis-labels"><span></span><div class="column-labels" id="enemyCols"></div></div>
-            <div class="board-row"><div class="row-labels" id="enemyRows"></div><div class="board" id="enemyBoard" aria-label="Opponent board"></div></div>
-            <p class="board-help" id="enemyHelp">You can fire here once both fleets are ready.</p>
-          </div>
-        </div>
-        <div class="battle-log-wrap">
-          <div class="log-heading"><h3>Battle log</h3><span class="live-label"><span></span> LIVE</span></div>
-          <div id="battleLog" class="battle-log" aria-live="polite"><p>Waiting for the match to begin…</p></div>
-        </div>
-        <div class="game-footer"><span>FLEET ARCADE / ONLINE</span><button class="button ghost small" id="leaveGameBtn">Leave game</button></div>
-      </section>
+      <section id="detailScreen" class="screen hidden"><button class="back-link" id="backToHome">← Back to library</button><div class="detail-layout"><section class="panel detail-panel"><div id="detailBadge" class="game-symbol">✦</div><div class="eyebrow" id="detailCategory">ARCADE</div><h2 id="detailTitle">Game title</h2><p id="detailDescription"></p><div class="detail-tags"><span id="detailDifficulty">NORMAL</span><span>5 ROUND SESSION</span><span>SOLO · VERSUS · CO-OP</span></div><div class="detail-mode-grid"><button id="soloBtn" class="mode-card"><b>Solo run</b><small>Play on your own</small><span>PLAY SOLO ↗</span></button><button id="versusBtn" class="mode-card"><b>Versus room</b><small>Compete for the high score</small><span>CREATE ROOM ↗</span></button><button id="coopBtn" class="mode-card"><b>Co-op room</b><small>Combine points as a team</small><span>TEAM UP ↗</span></button></div></section><aside class="panel detail-aside"><div class="aside-heading"><span>YOUR STATS</span><span class="tiny-dot"></span></div><div class="stat-big"><strong id="statBest">0</strong><span>PERSONAL BEST</span></div><div class="stat-row"><span>Sessions played</span><b id="statPlays">0</b></div><div class="stat-row"><span>Favourited</span><button id="detailFavorite" class="text-btn">☆ Add favourite</button></div><div class="tip-box"><span>TIP FROM HQ</span><p id="gameTip">Clean answers and fast decisions earn the most points.</p></div></aside></div></section>
+      <section id="lobbyScreen" class="screen hidden"><button class="back-link" id="lobbyBack">← Back to library</button><div class="panel lobby-panel"><div class="lobby-head"><div><div class="eyebrow">MULTIPLAYER LOBBY</div><h2 id="lobbyGameTitle">Preparing room</h2><p id="lobbySubtitle">Share the code with your friends.</p></div><div class="room-badge"><span>ROOM CODE</span><strong id="roomCodeDisplay">------</strong><button class="btn btn-small btn-secondary" id="copyRoomCode">Copy invite</button></div></div><div class="lobby-columns"><div><div class="subhead"><h3>Players</h3><span id="playerCount">0 / 8</span></div><div id="playerList" class="player-list"></div></div><div class="lobby-rules"><div class="eyebrow">MATCH SETTINGS</div><div class="rule-row"><span>Game mode</span><b id="roomModeLabel">VERSUS</b></div><div class="rule-row"><span>Rounds</span><b>5</b></div><div class="rule-row"><span>Players</span><b>2–8</b></div><p id="lobbyMessage">Waiting for players to join...</p><button id="startMatchBtn" class="btn btn-primary btn-full" disabled>Start match <span>→</span></button></div></div></div></section>
+      <section id="playScreen" class="screen hidden"><div class="play-top"><button class="back-link" id="leaveGameBtn">← Leave game</button><div class="play-meta"><span id="playModeBadge">SOLO</span><span id="playRoomLabel"></span></div></div><div class="play-layout"><section class="panel challenge-panel"><div class="challenge-head"><div><div class="eyebrow" id="playCategory">ARCADE</div><h2 id="playTitle">Game title</h2></div><div class="round-chip"><span>ROUND</span><strong id="roundNumber">1 / 5</strong></div></div><div class="challenge-desc" id="challengePrompt">Your challenge will appear here.</div><div id="challengeStage" class="challenge-stage"></div><div id="answerStatus" class="answer-status" aria-live="polite"></div><div id="resultPanel" class="result-panel hidden"></div><div class="challenge-footer"><span id="challengeHint">Good luck. Have fun.</span><div id="challengeActions" class="challenge-actions"></div></div></section><aside class="panel scoreboard-panel"><div class="aside-heading"><span id="scoreHeading">SESSION SCORE</span><span class="tiny-dot"></span></div><div class="score-total"><strong id="myScore">0</strong><span>POINTS</span></div><div class="score-progress"><div id="scoreProgressFill"></div></div><div class="subhead"><h3 id="playersHeading">Leaderboard</h3><span id="scoreRoundLabel">ROUND 1</span></div><div id="scoreboard" class="scoreboard"></div><div class="team-goal hidden" id="teamGoal"><span>TEAM TARGET</span><strong id="teamTargetText">2500 pts</strong><small id="teamProgressText">Keep contributing!</small></div></aside></div></section>
+      <section id="endScreen" class="screen hidden"><div class="panel end-panel"><div class="end-symbol">✦</div><div class="eyebrow">SESSION COMPLETE</div><h2 id="endTitle">Good game.</h2><p id="endSubtitle">Here's how you did.</p><div class="end-score"><strong id="endScore">0</strong><span>POINTS</span></div><div id="finalLeaderboard" class="final-leaderboard"></div><div class="end-actions"><button class="btn btn-primary" id="playAgainBtn">Play another session ↗</button><button class="btn btn-secondary" id="endHomeBtn">Back to library</button></div></div></section>
     </main>
-    <footer><span>FLEET ARCADE · 25 GAMES</span><span>SEARCH · FAVORITES · ROOM CODES · LIVE MATCHES</span></footer>
+    <footer><span>FLEET ARCADE <i>◈</i> 100 MINI-GAMES</span><span>PLAY FAIR · BRING YOUR FRIENDS</span></footer>
   </div>
-  <div class="toast" id="toast" role="status"></div>
-  <script src="/script.js"></script>
+  <div id="toast" class="toast" role="status"></div>
 </body>
 </html>
